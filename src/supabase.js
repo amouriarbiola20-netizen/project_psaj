@@ -88,6 +88,21 @@ async function updateJadwal(id, dataBaru) {
   return data[0];
 }
 
+async function ambilJadwalKelas(kelas, hari) {
+  let query = supabase
+    .from('jadwal_kelas')
+    .select('*')
+    .ilike('kelas', `%${kelas}%`);
+
+  if (hari) {
+    query = query.ilike('hari', hari);
+  }
+
+  const { data, error } = await query.order('hari', { ascending: true }).order('jam_mulai', { ascending: true });
+  if (error) throw error;
+  return data;
+}
+
 module.exports = {
   supabase,
   tambahJadwal,
@@ -95,4 +110,5 @@ module.exports = {
   ambilJadwalByRentang,
   cariJadwal,
   updateJadwal,
+  ambilJadwalKelas,
 };

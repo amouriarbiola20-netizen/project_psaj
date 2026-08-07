@@ -12,6 +12,7 @@ const {
   ambilJadwalByRentang,
   cariJadwal,
   updateJadwal,
+  ambilJadwalKelas,
 } = require('./src/supabase');
 
 const app = express();
@@ -121,6 +122,38 @@ async function prosesIntent(hasil) {
         .map((j) => `• ${j.hari}, ${j.tanggal} (${j.jam || '--:--'}) - ${j.kegiatan}`)
         .join('\n');
       return `📅 Jadwal minggu ini:\n${teks}`;
+    }
+
+    case 'cek_jadwal_kelas': {
+      if (!hasil.kelas) {
+        return 'Kelas yang mana ya? Sebutkan contohnya "jadwal kelas 12 TJKT 1" 🙏';
+      }
+
+      const daftar = await ambilJadwalKelas(hasil.kelas, hasil.hari);
+
+      if (daftar.length === 0) {
+        return `Belum ada data jadwal untuk kelas "${hasil.kelas}"${hasil.hari ? ` di hari ${hasil.hari}` : ''}. Mungkin datanya belum diupload.`;
+      }
+
+      // Kelompokkan per hari biar rapi
+      const perHari = {};
+      for (const j of daftar) {
+        if (!perHari[j.hari]) perHari[j.hari] = [];
+        perHari[j.hari].push(j);
+      }
+
+      const urutanHari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+      const bagian = urutanHari
+        .filter((h) => perHari[h])
+        .map((h) => {
+          const jamJam = perHari[h]
+            .map((j) => `   • ${j.jam_mulai}–${j.jam_selesai} — ${j.kode_mapel}${j.kode_ruang ? ` (Ruang ${j.kode_ruang})` : ''}`)
+            .join('\n');
+          return `📅 ${h}:\n${jamJam}`;
+        })
+        .join('\n\n');
+
+      return `Jadwal kelas ${daftar[0].kelas}:\n\n${bagian}`;
     }
 
     default:
