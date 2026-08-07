@@ -1,0 +1,105 @@
+const fetch = require('node-fetch');
+
+async function parseChat(pesanUser) {
+  const sekarang = new Date();
+  const tanggalHariIni = sekarang.toISOString().split('T')[0];
+  const hariIni = sekarang.toLocaleDateString('id-ID', { weekday: 'long' });
+
+  const systemPrompt = `Kamu adalah parser intent untuk chatbot jadwal.
+Hari ini adalah ${hariIni}, tanggal ${tanggalHariIni} (format YYYY-MM-DD).
+
+Tugasmu: baca pesan user, lalu balas HANYA dengan JSON murni (tanpa markdown, tanpa penjelasan tambahan), dengan struktur:
+
+{
+  "intent": "tambah_jadwal" | "edit_jadwal" | "cek_jadwal_hari" | "cek_jadwal_minggu" | "tidak_dikenali",
+  "jadwal": [
+    {
+      "kegiatan": string,
+      "tanggal": "YYYY-MM-DD",
+      "jam": "HH:mm" atau null,
+      "hari": string
+    }
+  ],
+  "kegiatan": string atau null,
+  "tanggal": "YYYY-MM-DD" atau null,
+  "jam": "HH:mm" atau null,
+  "hari": string atau null,
+  "kegiatan_baru": string atau null,
+  "tanggal_baru": "YYYY-MM-DD" atau null,
+  "jam_baru": "HH:mm" atau null,
+  "hari_baru": string atau null,
+  "balasan_ramah": string
+}
+
+Aturan:
+- Jika user bicara soal "besok", "lusa", "hari ini", dll, hitung tanggal aslinya berdasarkan hari ini.
+- Jika user minta TAMBAH jadwal baru, intent = "tambah_jadwal".
+  - Isi array "jadwal" dengan SATU OBJEK PER KEGIATAN yang disebut user, meskipun cuma 1 kegiatan.
+  - Contoh: "sekolah jam 7 pagi dan les jam 7 malam besok" → array berisi 2 objek, satu untuk "sekolah" (jam 07:00) dan satu untuk "les" (jam 19:00), keduanya dengan tanggal besok.
+  - Field lama ("kegiatan", "tanggal", "jam", "hari" di level atas) boleh diisi sama dengan objek pertama di array, untuk jaga-jaga kompatibilitas — tapi array "jadwal" adalah sumber utama.
+- Jika user minta UBAH/EDIT/GANTI jadwal yang sudah ada, intent = "edit_jadwal" (array "jadwal" boleh dikosongkan []).
+  - Field "kegiatan", "tanggal" (dan "jam" jika disebut) diisi dengan CIRI-CIRI jadwal LAMA yang mau dicari.
+  - Field "kegiatan_baru", "tanggal_baru", "jam_baru" diisi HANYA untuk nilai yang MAU DIUBAH (null kalau tidak disebut).
+  - Jika "tanggal_baru" diisi, hitung juga "hari_baru" yang sesuai.
+- Jika user TANYA jadwal di satu hari tertentu, intent = "cek_jadwal_hari".
+- Jika user tanya jadwal untuk rentang seminggu, intent = "cek_jadwal_minggu".
+- Jika pesan tidak berkaitan dengan jadwal sama sekali, intent = "tidak_dikenali".
+- Field "balasan_ramah" selalu diisi: satu kalimat singkat ramah dalam Bahasa Indonesia.
+- Balas HANYA JSON, jangan tambahkan teks lain apapun di luar JSON.`;
+
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.2,
+      max_tokens: 500,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: pesanUser },
+      ],
+    }),
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    console.error('Groq API error:', data.error);
+    return { intent: 'tidak_dikenali', balasan_ramah: 'Maaf, ada kendala di layanan AI. Coba lagi sebentar ya.' };
+  }
+
+  const teksMentah = data?.choices?.[0]?.message?.content || '{}';
+
+  try {
+    const bersih = teksMentah.replace(/```json|```/g, '').trim();
+    const hasil = JSON.parse(bersih);
+
+    // Jaga-jaga: kalau AI tidak isi array "jadwal" tapi isi field kegiatan/tanggal
+    // di level atas (format lama), bungkus jadi array supaya server.js tetap konsisten.
+    if (hasil.intent === 'tambah_jadwal' && (!Array.isArray(hasil.jadwal) || hasil.jadwal.length === 0)) {
+      if (hasil.kegiatan && hasil.tanggal) {
+        hasil.jadwal = [
+          {
+            kegiatan: hasil.kegiatan,
+            tanggal: hasil.tanggal,
+            jam: hasil.jam || null,
+            hari: hasil.hari || null,
+          },
+        ];
+      } else {
+        hasil.jadwal = [];
+      }
+    }
+
+    return hasil;
+  } catch (err) {
+    console.error('Gagal parse JSON dari AI:', teksMentah);
+    return { intent: 'tidak_dikenali', balasan_ramah: 'Maaf, aku belum paham maksudnya.' };
+  }
+}
+
+module.exports = { parseChat };

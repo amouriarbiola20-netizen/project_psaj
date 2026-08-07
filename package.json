@@ -1,0 +1,16 @@
+{
+  "name": "web-chatbot-jadwal",
+  "version": "1.0.0",
+  "description": "Chatbot AI berbasis web untuk cek/tambah/edit jadwal - Tugas SMK",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "@supabase/supabase-js": "^2.45.4",
+    "node-fetch": "^2.7.0",
+    "dotenv": "^16.4.5"
+  }
+}
