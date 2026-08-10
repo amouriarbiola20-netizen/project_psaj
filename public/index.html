@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Papan Jadwal — Asisten AI</title>
+<title>Jadwal Pelajaran Harian Siswa — SMK Telkom Purwokerto</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --board: #1e2a22;
-    --board-soft: #24352a;
-    --board-line: #3c4e40;
-    --chalk: #f4f1e8;
-    --chalk-dim: #c9cfc4;
-    --chalk-yellow: #e8c468;
-    --chalk-blue: #8fb8b0;
+    --board: #0b0b0d;
+    --board-soft: #161113;
+    --board-line: #3a1414;
+    --chalk: #f5f2ee;
+    --chalk-dim: #c9beb8;
+    --red: #e8232b;
+    --red-deep: #9c0f18;
+    --red-glow: rgba(232, 35, 43, 0.35);
+    --white: #ffffff;
   }
 
   * { box-sizing: border-box; }
@@ -24,8 +26,9 @@
     min-height: 100vh;
     background: var(--board);
     background-image:
-      radial-gradient(ellipse at top left, rgba(255,255,255,0.03), transparent 55%),
-      radial-gradient(ellipse at bottom right, rgba(255,255,255,0.025), transparent 55%);
+      radial-gradient(ellipse at top left, rgba(232,35,43,0.10), transparent 55%),
+      radial-gradient(ellipse at bottom right, rgba(255,255,255,0.035), transparent 55%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 26px);
     font-family: 'Inter', sans-serif;
     color: var(--chalk);
     display: flex;
@@ -42,9 +45,38 @@
     padding: 28px 20px 20px;
   }
 
+  /* garis aksen merah-putih di paling atas biar ada identitas warna sejak awal */
+  .frame::before {
+    content: '';
+    display: block;
+    height: 4px;
+    width: 100%;
+    border-radius: 4px;
+    margin-bottom: 22px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--red) 0 26px,
+      var(--white) 26px 40px,
+      #111 40px 46px
+    );
+    box-shadow: 0 0 16px var(--red-glow);
+  }
+
   header {
     text-align: center;
     margin-bottom: 18px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .logo-wrap img {
+    height: 64px;
+    width: auto;
+    filter: drop-shadow(0 0 14px var(--red-glow));
   }
 
   .eyebrow {
@@ -52,18 +84,28 @@
     font-size: 11px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--chalk-blue);
-    opacity: 0.85;
+    color: var(--chalk-dim);
+    opacity: 0.9;
   }
 
   h1 {
     font-family: 'Caveat', cursive;
     font-weight: 700;
-    font-size: 48px;
-    margin: 4px 0 6px;
-    color: var(--chalk);
+    font-size: 40px;
+    line-height: 1.15;
+    margin: 6px 0 4px;
     position: relative;
     display: inline-block;
+    background: linear-gradient(90deg, var(--red) 0%, var(--white) 45%, var(--red) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 6s linear infinite;
+  }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
   }
 
   h1::after {
@@ -74,15 +116,28 @@
     bottom: -4px;
     height: 3px;
     background-image: repeating-linear-gradient(
-      90deg, var(--chalk-yellow) 0 10px, transparent 10px 16px
+      90deg, var(--red) 0 10px, var(--white) 10px 14px, transparent 14px 20px
     );
-    opacity: 0.8;
+    opacity: 0.85;
     border-radius: 2px;
   }
 
+  h2.school {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin: 8px 0 2px;
+    color: var(--white);
+  }
+
+  h2.school span {
+    color: var(--red);
+  }
+
   .subtitle {
-    font-size: 13.5px;
+    font-size: 13px;
     color: var(--chalk-dim);
+    margin-top: 4px;
   }
 
   .chat-panel {
@@ -93,7 +148,7 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 45px -20px rgba(156,15,24,0.35), 0 0 0 1px rgba(255,255,255,0.02) inset;
   }
 
   .messages {
@@ -127,16 +182,16 @@
   }
 
   .row.user .bubble {
-    background: rgba(232, 196, 104, 0.12);
-    border: 1px dashed rgba(232, 196, 104, 0.55);
-    color: var(--chalk-yellow);
+    background: rgba(232, 35, 43, 0.14);
+    border: 1px dashed rgba(232, 35, 43, 0.6);
+    color: var(--white);
     border-radius: 10px 10px 2px 10px;
   }
 
   .row.bot .bubble {
     background: none;
     border: none;
-    border-left: 2px solid var(--chalk-blue);
+    border-left: 2px solid var(--red);
     padding-left: 14px;
     color: var(--chalk);
   }
@@ -148,11 +203,11 @@
     text-transform: uppercase;
     display: block;
     margin-bottom: 4px;
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
-  .row.user .label { color: var(--chalk-yellow); text-align: right; }
-  .row.bot .label { color: var(--chalk-blue); }
+  .row.user .label { color: var(--red); text-align: right; }
+  .row.bot .label { color: var(--chalk-dim); }
 
   .typing {
     display: inline-flex;
@@ -161,7 +216,7 @@
   }
   .typing span {
     width: 5px; height: 5px; border-radius: 50%;
-    background: var(--chalk-blue);
+    background: var(--red);
     animation: blink 1.2s infinite ease-in-out;
   }
   .typing span:nth-child(2) { animation-delay: 0.15s; }
@@ -173,7 +228,7 @@
     padding: 14px 16px;
     display: flex;
     gap: 10px;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,0.25);
   }
 
   #pesan {
@@ -189,14 +244,15 @@
   }
 
   #pesan:focus {
-    border-color: var(--chalk-blue);
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-glow);
   }
 
-  #pesan::placeholder { color: #7c8a80; }
+  #pesan::placeholder { color: #8a7d78; }
 
   button {
-    background: var(--chalk-yellow);
-    color: #24301f;
+    background: linear-gradient(90deg, var(--red-deep), var(--red));
+    color: var(--white);
     border: none;
     border-radius: 8px;
     padding: 0 20px;
@@ -204,10 +260,10 @@
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: filter 0.15s;
+    transition: filter 0.15s, transform 0.15s;
   }
-  button:hover { filter: brightness(1.08); }
-  button:disabled { opacity: 0.5; cursor: default; }
+  button:hover { filter: brightness(1.12); transform: translateY(-1px); }
+  button:disabled { opacity: 0.5; cursor: default; transform: none; }
 
   .hints {
     display: flex;
@@ -227,8 +283,18 @@
     transition: border-color 0.15s, color 0.15s;
   }
   .hint:hover {
-    border-color: var(--chalk-blue);
-    color: var(--chalk-blue);
+    border-color: var(--red);
+    color: var(--white);
+    background: rgba(232,35,43,0.12);
+  }
+
+  footer.foot-note {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--chalk-dim);
+    opacity: 0.7;
+    letter-spacing: 0.04em;
   }
 
   ::-webkit-scrollbar { width: 8px; }
@@ -238,8 +304,13 @@
 <body>
   <div class="frame">
     <header>
+      <div class="logo-wrap">
+        <!-- Ganti "logo-smk.png" sesuai nama file logo yang kamu upload ke folder public/ -->
+        <img src="/logo-smk.png" alt="Logo SMK Telkom Purwokerto" />
+      </div>
       <div class="eyebrow">Asisten Jadwal · AI</div>
-      <h1>Papan Jadwal</h1>
+      <h1>Jadwal Pelajaran Harian Siswa</h1>
+      <h2 class="school">SMK <span>Telkom</span> Purwokerto</h2>
       <div class="subtitle">Tulis di kolom bawah, aku catat di papan.</div>
     </header>
 
@@ -256,6 +327,8 @@
       <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
       <button class="hint" data-msg="tambahin jadwal piket kelas besok jam 7 pagi">+ tambah jadwal</button>
     </div>
+
+    <footer class="foot-note">SMK Telkom Purwokerto · Papan Jadwal Digital</footer>
   </div>
 
 <script>
