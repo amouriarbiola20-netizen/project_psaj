@@ -3,6 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD
+<title>Jadwal Pelajaran Harian Siswa — SMK Telkom Purwokerto (Kelas 12 TJKT 1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --red: #E30613;
+    --red-deep: #A8040F;
+    --red-glow: rgba(227, 6, 19, 0.25);
+    --ink: #1A1A1E;
+    --ink-soft: #5B5B63;
+    --paper: #FFFFFF;
+    --paper-soft: #F5F5F7;
+    --line: #E7E6E8;
+=======
 <title>Jadwal Pelajaran Harian Siswa — SMK Telkom Purwokerto — (Kelas 12 TJKT 1)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -17,6 +32,7 @@
     --red-deep: #9c0f18;
     --red-glow: rgba(232, 35, 43, 0.35);
     --white: #ffffff;
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   }
 
   * { box-sizing: border-box; }
@@ -24,13 +40,17 @@
   body {
     margin: 0;
     min-height: 100vh;
+<<<<<<< HEAD
+    background: var(--paper-soft);
+=======
     background: var(--board);
     background-image:
       radial-gradient(ellipse at top left, rgba(232,35,43,0.10), transparent 55%),
       radial-gradient(ellipse at bottom right, rgba(255,255,255,0.035), transparent 55%),
       repeating-linear-gradient(135deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 26px);
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
     font-family: 'Inter', sans-serif;
-    color: var(--chalk);
+    color: var(--ink);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -42,9 +62,60 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 28px 20px 20px;
+    background: var(--paper);
+    box-shadow: 0 0 40px rgba(0,0,0,0.06);
   }
 
+<<<<<<< HEAD
+  /* ===== Top bar: logo + nama sekolah, seperti navbar web resmi ===== */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 3px solid var(--red);
+  }
+
+  .topbar img {
+    height: 40px;
+    width: auto;
+  }
+
+  .topbar .school-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .topbar .school-name span {
+    color: var(--red);
+  }
+
+  .topbar .school-sub {
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  /* ===== Hero: foto gedung sekolah + judul, seperti header web resmi ===== */
+  .hero {
+    position: relative;
+    height: 230px;
+    background-image:
+      linear-gradient(180deg, rgba(20,4,6,0.35) 0%, rgba(20,4,6,0.78) 100%),
+      url('/hero-sekolah.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 22px 20px;
+  }
+
+  .hero .eyebrow {
+=======
   /* garis aksen merah-putih di paling atas biar ada identitas warna sejak awal */
   .frame::before {
     content: '';
@@ -80,10 +151,44 @@
   }
 
   .eyebrow {
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
+<<<<<<< HEAD
+    color: #FFD9DB;
+    margin-bottom: 6px;
+  }
+
+  .hero h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    color: var(--paper);
+  }
+
+  .hero .subtitle {
+    font-size: 13px;
+    color: #F1E3E4;
+  }
+
+  .hero .kelas-tag {
+    display: inline-block;
+    margin-top: 10px;
+    align-self: flex-start;
+    background: var(--red);
+    color: var(--paper);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  /* ===== Chat panel ===== */
+=======
     color: var(--chalk-dim);
     opacity: 0.9;
   }
@@ -140,15 +245,16 @@
     margin-top: 4px;
   }
 
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   .chat-panel {
     flex: 1;
-    background: var(--board-soft);
-    border: 1px solid var(--board-line);
-    border-radius: 14px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+<<<<<<< HEAD
+=======
     box-shadow: 0 20px 45px -20px rgba(156,15,24,0.35), 0 0 0 1px rgba(255,255,255,0.02) inset;
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   }
 
   .messages {
@@ -158,8 +264,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    min-height: 380px;
-    max-height: 58vh;
+    min-height: 340px;
+    max-height: 52vh;
+    background: var(--paper-soft);
   }
 
   .row { display: flex; }
@@ -169,7 +276,7 @@
   .bubble {
     max-width: 82%;
     padding: 10px 14px;
-    border-radius: 4px;
+    border-radius: 12px;
     font-size: 14.5px;
     line-height: 1.55;
     white-space: pre-wrap;
@@ -182,6 +289,19 @@
   }
 
   .row.user .bubble {
+<<<<<<< HEAD
+    background: var(--red);
+    color: var(--paper);
+    border-radius: 12px 12px 2px 12px;
+    box-shadow: 0 6px 14px -6px var(--red-glow);
+  }
+
+  .row.bot .bubble {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 2px 12px 12px 12px;
+=======
     background: rgba(232, 35, 43, 0.14);
     border: 1px dashed rgba(232, 35, 43, 0.6);
     color: var(--white);
@@ -194,6 +314,7 @@
     border-left: 2px solid var(--red);
     padding-left: 14px;
     color: var(--chalk);
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   }
 
   .label {
@@ -206,13 +327,17 @@
     opacity: 0.75;
   }
 
+<<<<<<< HEAD
+  .row.user .label { color: #FFE3E4; text-align: right; }
+  .row.bot .label { color: var(--ink-soft); }
+=======
   .row.user .label { color: var(--red); text-align: right; }
   .row.bot .label { color: var(--chalk-dim); }
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
 
   .typing {
     display: inline-flex;
     gap: 4px;
-    padding-left: 14px;
   }
   .typing span {
     width: 5px; height: 5px; border-radius: 50%;
@@ -224,20 +349,24 @@
   @keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
 
   .input-tray {
-    border-top: 1px solid var(--board-line);
+    border-top: 1px solid var(--line);
     padding: 14px 16px;
     display: flex;
     gap: 10px;
+<<<<<<< HEAD
+    background: var(--paper);
+=======
     background: rgba(0,0,0,0.25);
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   }
 
   #pesan {
     flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--board-line);
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 11px 14px;
-    color: var(--chalk);
+    color: var(--ink);
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     outline: none;
@@ -248,11 +377,19 @@
     box-shadow: 0 0 0 3px var(--red-glow);
   }
 
+<<<<<<< HEAD
+  #pesan::placeholder { color: #A6A3A6; }
+
+  button {
+    background: linear-gradient(90deg, var(--red-deep), var(--red));
+    color: var(--paper);
+=======
   #pesan::placeholder { color: #8a7d78; }
 
   button {
     background: linear-gradient(90deg, var(--red-deep), var(--red));
     color: var(--white);
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
     border: none;
     border-radius: 8px;
     padding: 0 20px;
@@ -262,47 +399,79 @@
     cursor: pointer;
     transition: filter 0.15s, transform 0.15s;
   }
+<<<<<<< HEAD
+  button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+=======
   button:hover { filter: brightness(1.12); transform: translateY(-1px); }
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   button:disabled { opacity: 0.5; cursor: default; transform: none; }
 
   .hints {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 14px;
+    padding: 14px 20px 4px;
+    background: var(--paper);
   }
   .hint {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11.5px;
-    color: var(--chalk-dim);
-    border: 1px dashed var(--board-line);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
     border-radius: 20px;
     padding: 6px 12px;
     cursor: pointer;
-    background: transparent;
-    transition: border-color 0.15s, color 0.15s;
+    background: var(--paper-soft);
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
   }
   .hint:hover {
     border-color: var(--red);
+<<<<<<< HEAD
+    color: var(--red-deep);
+    background: rgba(227,6,19,0.06);
+=======
     color: var(--white);
     background: rgba(232,35,43,0.12);
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   }
 
   footer.foot-note {
     text-align: center;
+<<<<<<< HEAD
+    padding: 14px 20px 20px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    background: var(--paper);
+=======
     margin-top: 16px;
     font-size: 11px;
     color: var(--chalk-dim);
     opacity: 0.7;
     letter-spacing: 0.04em;
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
   }
 
   ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-thumb { background: var(--board-line); border-radius: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
 </style>
 </head>
 <body>
   <div class="frame">
+<<<<<<< HEAD
+    <div class="topbar">
+      <!-- Ganti "logo-smk.png" sesuai nama file logo yang kamu upload ke folder public/ -->
+      <img src="/logo-smk.png" alt="Logo SMK Telkom Purwokerto" />
+      <div>
+        <div class="school-name">SMK <span>Telkom</span> Purwokerto</div>
+        <div class="school-sub">Asisten Jadwal · AI</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="eyebrow">Papan Jadwal Digital</div>
+      <h1>Jadwal Pelajaran Harian Siswa</h1>
+=======
     <header>
       <div class="logo-wrap">
         <!-- Ganti "logo-smk.png" sesuai nama file logo yang kamu upload ke folder public/ -->
@@ -312,23 +481,33 @@
       <h1>Jadwal Pelajaran Harian Siswa</h1>
       <h2 class="school">SMK <span>Telkom</span> Purwokerto</h2>
       <div class="subtitle">Kelas 12 TJKT 1</div>
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
       <div class="subtitle">Tulis di kolom bawah, aku catat di papan.</div>
-    </header>
+      <div class="kelas-tag">Kelas 12 TJKT 1</div>
+    </div>
 
     <div class="chat-panel">
       <div class="messages" id="messages"></div>
+      <div class="hints">
+        <button class="hint" data-msg="jadwal aku hari ini apa aja?">jadwal hari ini?</button>
+        <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
+        <button class="hint" data-msg="tambahin jadwal piket kelas besok jam 7 pagi">+ tambah jadwal</button>
+      </div>
       <div class="input-tray">
         <input id="pesan" type="text" placeholder="Contoh: tambahin jadwal les matematika besok jam 4 sore" autocomplete="off" />
         <button id="kirim">Kirim</button>
       </div>
     </div>
 
+<<<<<<< HEAD
+=======
     <div class="hints">
       <button class="hint" data-msg="jadwal aku hari ini apa aja?">jadwal hari ini?</button>
       <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
       <button class="hint" data-msg="tambahin jadwal piket kelas besok jam 7 pagi">+ tambah jadwal</button>
     </div>
 
+>>>>>>> 3cd9a5fd68d24183816ad7e78a42cdeef3866479
     <footer class="foot-note">SMK Telkom Purwokerto · Papan Jadwal Digital</footer>
   </div>
 
