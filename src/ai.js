@@ -61,8 +61,9 @@ Aturan:
     },
     body: JSON.stringify({
       model: 'openai/gpt-oss-120b',
+      reasoning_effort: 'low',
       temperature: 0.2,
-      max_tokens: 500,
+      max_tokens: 1500,
       response_format: { type: 'json_object' },
       messages: [
         { role: 'system', content: systemPrompt },
