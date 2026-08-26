@@ -12,6 +12,7 @@ const {
   ambilJadwalByRentang,
   cariJadwal,
   updateJadwal,
+  hapusJadwal,
   ambilJadwalKelas,
 } = require('./src/supabase');
 
@@ -36,16 +37,10 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-/**
- * Logika inti: sesuai intent yang dikembalikan AI, ambil/simpan/ubah data
- * di database, lalu susun balasan untuk ditampilkan di chat.
- */
 async function prosesIntent(hasil) {
   switch (hasil.intent) {
     case 'tambah_jadwal': {
       const daftarJadwal = Array.isArray(hasil.jadwal) ? hasil.jadwal : [];
-
-      // Saring cuma yang punya kegiatan + tanggal lengkap
       const valid = daftarJadwal.filter((j) => j.kegiatan && j.tanggal);
 
       if (valid.length === 0) {
@@ -54,8 +49,15 @@ async function prosesIntent(hasil) {
 
       const hasilSimpan = [];
       for (const item of valid) {
-        const disimpan = await tambahJadwal(item);
-        hasilSimpan.push(disimpan);
+        try {
+          const disimpan = await tambahJadwal(item);
+          hasilSimpan.push(disimpan);
+        } catch (err) {
+          if (err.tipe === 'tanggal_invalid') {
+            return `Tanggal untuk "${item.kegiatan}" kurang jelas nih, coba sebutkan tanggal atau hari yang lebih pasti ya 🙏`;
+          }
+          throw err;
+        }
       }
 
       if (hasilSimpan.length === 1) {
@@ -93,6 +95,27 @@ async function prosesIntent(hasil) {
         hari: hasil.hari_baru,
       });
       return `✅ Jadwal berhasil diubah:\n${updated.kegiatan}\n📅 ${updated.hari || ''}, ${updated.tanggal}${updated.jam ? `\n⏰ ${updated.jam}` : ''}`;
+    }
+
+    case 'hapus_jadwal': {
+      if (!hasil.kegiatan) {
+        return 'Jadwal yang mana yang mau dihapus? Sebutkan nama kegiatannya ya 🙏';
+      }
+      const ditemukan = await cariJadwal(hasil.kegiatan, hasil.tanggal);
+
+      if (ditemukan.length === 0) {
+        return `Aku tidak menemukan jadwal "${hasil.kegiatan}"${hasil.tanggal ? ` pada ${hasil.tanggal}` : ''}. Mungkin sudah terhapus atau belum pernah tercatat.`;
+      }
+      if (ditemukan.length > 1) {
+        const daftar = ditemukan
+          .map((j) => `• ${j.kegiatan} — ${j.hari}, ${j.tanggal} (${j.jam || '--:--'})`)
+          .join('\n');
+        return `Ada beberapa jadwal yang cocok, sebutkan lebih spesifik biar nggak salah hapus:\n${daftar}`;
+      }
+
+      const target = ditemukan[0];
+      await hapusJadwal(target.id);
+      return `🗑️ Oke, jadwal ini sudah dihapus:\n${target.kegiatan}\n📅 ${target.hari}, ${target.tanggal}${target.jam ? `\n⏰ ${target.jam}` : ''}`;
     }
 
     case 'cek_jadwal_hari': {
@@ -135,7 +158,6 @@ async function prosesIntent(hasil) {
         return `Belum ada data jadwal untuk kelas "${hasil.kelas}"${hasil.hari ? ` di hari ${hasil.hari}` : ''}. Mungkin datanya belum diupload.`;
       }
 
-      // Kelompokkan per hari biar rapi
       const perHari = {};
       for (const j of daftar) {
         if (!perHari[j.hari]) perHari[j.hari] = [];
