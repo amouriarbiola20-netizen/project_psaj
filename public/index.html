@@ -6,6 +6,7 @@
 <title>Jadwal Pelajaran Harian Siswa — SMK Telkom Purwokerto (Kelas 12 TJKT 1)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
   :root {
     --red: #E30613;
@@ -77,6 +78,110 @@
     font-size: 11px;
     color: var(--ink-soft);
     letter-spacing: 0.02em;
+  }
+
+  /* ===== Area login admin di pojok kanan topbar ===== */
+  .auth-area {
+    margin-left: auto;
+  }
+
+  .auth-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: var(--paper-soft);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .auth-btn:hover { border-color: var(--red); color: var(--red-deep); }
+
+  .auth-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+  }
+  .auth-badge .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #17A34A;
+    box-shadow: 0 0 0 3px rgba(23,163,74,0.15);
+  }
+  .auth-badge span.label { color: var(--ink-soft); }
+  .auth-badge button {
+    font-family: 'Inter', sans-serif;
+    font-size: 10.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .auth-badge button:hover { border-color: var(--red); color: var(--red-deep); }
+
+  /* ===== Modal login ===== */
+  .login-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,4,6,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    padding: 20px;
+  }
+  .login-box {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 22px;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 0 20px 45px -15px rgba(0,0,0,0.4);
+  }
+  .login-box h3 {
+    margin: 0 0 4px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .login-box p.hint-text {
+    margin: 0 0 16px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .login-box input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13.5px;
+    outline: none;
+    background: var(--paper-soft);
+  }
+  .login-box input:focus { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-glow); }
+  .login-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .login-actions button { flex: 1; }
+  .btn-secondary {
+    background: var(--paper-soft) !important;
+    color: var(--ink-soft) !important;
+    border: 1px solid var(--line);
+  }
+  .login-error {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--red-deep);
+    min-height: 14px;
   }
 
   /* ===== Hero: foto gedung sekolah + judul, seperti header web resmi ===== */
@@ -182,230 +287,3 @@
     background: var(--paper);
     border: 1px solid var(--line);
     color: var(--ink);
-    border-radius: 2px 12px 12px 12px;
-  }
-
-  .label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 4px;
-    opacity: 0.75;
-  }
-
-  .row.user .label { color: #FFE3E4; text-align: right; }
-  .row.bot .label { color: var(--ink-soft); }
-
-  .typing {
-    display: inline-flex;
-    gap: 4px;
-  }
-  .typing span {
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--red);
-    animation: blink 1.2s infinite ease-in-out;
-  }
-  .typing span:nth-child(2) { animation-delay: 0.15s; }
-  .typing span:nth-child(3) { animation-delay: 0.3s; }
-  @keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
-
-  .input-tray {
-    border-top: 1px solid var(--line);
-    padding: 14px 16px;
-    display: flex;
-    gap: 10px;
-    background: var(--paper);
-  }
-
-  #pesan {
-    flex: 1;
-    background: var(--paper-soft);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 11px 14px;
-    color: var(--ink);
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    outline: none;
-  }
-
-  #pesan:focus {
-    border-color: var(--red);
-    box-shadow: 0 0 0 3px var(--red-glow);
-  }
-
-  #pesan::placeholder { color: #A6A3A6; }
-
-  button {
-    background: linear-gradient(90deg, var(--red-deep), var(--red));
-    color: var(--paper);
-    border: none;
-    border-radius: 8px;
-    padding: 0 20px;
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: filter 0.15s, transform 0.15s;
-  }
-  button:hover { filter: brightness(1.08); transform: translateY(-1px); }
-  button:disabled { opacity: 0.5; cursor: default; transform: none; }
-
-  .hints {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 14px 20px 4px;
-    background: var(--paper);
-  }
-  .hint {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11.5px;
-    color: var(--ink-soft);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    padding: 6px 12px;
-    cursor: pointer;
-    background: var(--paper-soft);
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-  }
-  .hint:hover {
-    border-color: var(--red);
-    color: var(--red-deep);
-    background: rgba(227,6,19,0.06);
-  }
-
-  footer.foot-note {
-    text-align: center;
-    padding: 14px 20px 20px;
-    font-size: 11px;
-    color: var(--ink-soft);
-    letter-spacing: 0.04em;
-    background: var(--paper);
-  }
-
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
-</style>
-</head>
-<body>
-  <div class="frame">
-    <div class="topbar">
-      <!-- Ganti "logo-smk.png" sesuai nama file logo yang kamu upload ke folder public/ -->
-      <img src="/logo-smk.png" alt="Logo SMK Telkom Purwokerto" />
-      <div>
-        <div class="school-name">SMK <span>Telkom</span> Purwokerto</div>
-        <div class="school-sub">Asisten Jadwal · AI</div>
-      </div>
-    </div>
-
-    <div class="hero">
-      <div class="eyebrow">Papan Jadwal Digital</div>
-      <h1>Jadwal Pelajaran Harian Siswa</h1>
-      <div class="subtitle">Tulis di kolom bawah, aku catat di papan.</div>
-      <div class="kelas-tag">Kelas 12 TJKT 1</div>
-    </div>
-
-    <div class="chat-panel">
-      <div class="messages" id="messages"></div>
-     <div class="hints">
-       <button class="hint" data-msg="jadwal aku hari ini apa aja?">jadwal hari ini?</button>
-       <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
-       <button class="hint" data-fill="true" data-msg="tambahin jadwal [nama kegiatan] [besok/tanggal] jam [waktu]">+ tambah jadwal</button>
-     </div>
-      <div class="input-tray">
-        <input id="pesan" type="text" placeholder="Contoh: tambahin jadwal les matematika besok jam 4 sore" autocomplete="off" />
-        <button id="kirim">Kirim</button>
-      </div>
-    </div>
-
-    <footer class="foot-note">SMK Telkom Purwokerto · Papan Jadwal Digital</footer>
-  </div>
-
-<script>
-  const messagesEl = document.getElementById('messages');
-  const inputEl = document.getElementById('pesan');
-  const kirimBtn = document.getElementById('kirim');
-
-  function tambahBubble(teks, pengirim) {
-    const row = document.createElement('div');
-    row.className = 'row ' + pengirim;
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    const label = document.createElement('span');
-    label.className = 'label';
-    label.textContent = pengirim === 'user' ? 'kamu' : 'asisten';
-    bubble.appendChild(label);
-    const isi = document.createElement('span');
-    isi.textContent = teks;
-    bubble.appendChild(isi);
-    row.appendChild(bubble);
-    messagesEl.appendChild(row);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-    return row;
-  }
-
-  function tampilkanTyping() {
-    const row = document.createElement('div');
-    row.className = 'row bot';
-    row.id = 'typing-row';
-    row.innerHTML = '<div class="bubble"><span class="label">asisten</span><span class="typing"><span></span><span></span><span></span></span></div>';
-    messagesEl.appendChild(row);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-  }
-
-  function hapusTyping() {
-    const el = document.getElementById('typing-row');
-    if (el) el.remove();
-  }
-
-  async function kirimPesan(teks) {
-    if (!teks.trim()) return;
-    tambahBubble(teks, 'user');
-    inputEl.value = '';
-    kirimBtn.disabled = true;
-    tampilkanTyping();
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pesan: teks }),
-      });
-      const data = await res.json();
-      hapusTyping();
-      tambahBubble(data.balasan || 'Maaf, tidak ada balasan.', 'bot');
-    } catch (err) {
-      hapusTyping();
-      tambahBubble('Maaf, gagal terhubung ke server. Coba lagi ya.', 'bot');
-    } finally {
-      kirimBtn.disabled = false;
-      inputEl.focus();
-    }
-  }
-
-  kirimBtn.addEventListener('click', () => kirimPesan(inputEl.value));
-  inputEl.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') kirimPesan(inputEl.value);
-  });
-
-  // Tombol contoh: kalau data-fill="true", cuma isi kolom teks (biar bisa diedit
-  // dulu sebelum dikirim). Kalau tidak ada atribut itu, langsung kirim seperti biasa.
-  document.querySelectorAll('.hint').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if (btn.dataset.fill === 'true') {
-        inputEl.value = btn.dataset.msg;
-        inputEl.focus();
-        inputEl.setSelectionRange(0, inputEl.value.length);
-      } else {
-        kirimPesan(btn.dataset.msg);
-      }
-    });
-  });
-
-  tambahBubble('Halo! Aku bisa bantu catat, ubah, atau cek jadwal kamu. Coba tulis sesuatu, atau klik salah satu contoh di bawah ✏️', 'bot');
-</script>
-</body>
-</html>
