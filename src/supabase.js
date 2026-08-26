@@ -2,13 +2,6 @@
 // Koneksi ke Supabase (PostgreSQL + Auth) + fungsi simpan/ambil/edit/hapus jadwal
 const { createClient } = require('@supabase/supabase-js');
 
-// ===== DEBUG SEMENTARA — hapus lagi setelah masalah ketemu =====
-console.log('DEBUG SUPABASE_URL ada?', !!process.env.SUPABASE_URL);
-console.log('DEBUG SUPABASE_SECRET_KEY ada?', !!process.env.SUPABASE_SECRET_KEY);
-console.log('DEBUG SUPABASE_ANON_KEY ada?', !!process.env.SUPABASE_ANON_KEY);
-console.log('DEBUG semua nama env yang mengandung SUPABASE:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
-// ================================================================
-
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SECRET_KEY
