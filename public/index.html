@@ -287,3 +287,317 @@
     background: var(--paper);
     border: 1px solid var(--line);
     color: var(--ink);
+    border-radius: 2px 12px 12px 12px;
+  }
+
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 4px;
+    opacity: 0.75;
+  }
+
+  .row.user .label { color: #FFE3E4; text-align: right; }
+  .row.bot .label { color: var(--ink-soft); }
+
+  .typing {
+    display: inline-flex;
+    gap: 4px;
+  }
+  .typing span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--red);
+    animation: blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+
+  .input-tray {
+    border-top: 1px solid var(--line);
+    padding: 14px 16px;
+    display: flex;
+    gap: 10px;
+    background: var(--paper);
+  }
+
+  #pesan {
+    flex: 1;
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 11px 14px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+
+  #pesan:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px var(--red-glow);
+  }
+
+  #pesan::placeholder { color: #A6A3A6; }
+
+  button {
+    background: linear-gradient(90deg, var(--red-deep), var(--red));
+    color: var(--paper);
+    border: none;
+    border-radius: 8px;
+    padding: 0 20px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.15s;
+  }
+  button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  button:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+  .hints {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 20px 4px;
+    background: var(--paper);
+  }
+  .hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+    background: var(--paper-soft);
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+  }
+  .hint:hover {
+    border-color: var(--red);
+    color: var(--red-deep);
+    background: rgba(227,6,19,0.06);
+  }
+
+  footer.foot-note {
+    text-align: center;
+    padding: 14px 20px 20px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    background: var(--paper);
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="topbar">
+      <!-- Ganti "logo-smk.png" sesuai nama file logo yang kamu upload ke folder public/ -->
+      <img src="/logo-smk.png" alt="Logo SMK Telkom Purwokerto" />
+      <div>
+        <div class="school-name">SMK <span>Telkom</span> Purwokerto</div>
+        <div class="school-sub">Asisten Jadwal · AI</div>
+      </div>
+      <div class="auth-area" id="authArea">
+        <button class="auth-btn" id="btnBukaLogin">Login Admin</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="eyebrow">Papan Jadwal Digital</div>
+      <h1>Jadwal Pelajaran Harian Siswa</h1>
+      <div class="subtitle">Tulis di kolom bawah, aku catat di papan.</div>
+      <div class="kelas-tag">Kelas 12 TJKT 1</div>
+    </div>
+
+    <div class="chat-panel">
+      <div class="messages" id="messages"></div>
+     <div class="hints">
+       <button class="hint" data-msg="jadwal aku hari ini apa aja?">jadwal hari ini?</button>
+       <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
+       <button class="hint" data-fill="true" data-msg="tambahin jadwal [nama kegiatan] [besok/tanggal] jam [waktu]">+ tambah jadwal</button>
+     </div>
+      <div class="input-tray">
+        <input id="pesan" type="text" placeholder="Contoh: tambahin jadwal les matematika besok jam 4 sore" autocomplete="off" />
+        <button id="kirim">Kirim</button>
+      </div>
+    </div>
+
+    <footer class="foot-note">SMK Telkom Purwokerto · Papan Jadwal Digital</footer>
+  </div>
+
+  <!-- Modal login admin, tersembunyi sampai tombol Login Admin diklik -->
+  <div class="login-overlay" id="loginOverlay" style="display:none;">
+    <div class="login-box">
+      <h3>Login Admin</h3>
+      <p class="hint-text">Cuma admin yang bisa nambah/ubah/hapus jadwal.</p>
+      <input id="loginEmail" type="email" placeholder="Email admin" autocomplete="off" />
+      <input id="loginPassword" type="password" placeholder="Password" autocomplete="off" />
+      <div class="login-actions">
+        <button id="loginSubmit">Masuk</button>
+        <button id="loginCancel" class="btn-secondary" type="button">Batal</button>
+      </div>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+
+<script>
+  // ============== GANTI 2 BARIS INI sesuai punya kamu ==============
+  // Ambil dari dashboard Supabase: Settings > API
+  const SUPABASE_URL = https://bqurhnkdthapekstpsew.supabase.co;
+  const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxdXJobmtkdGhhcGVrc3Rwc2V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2ODI1MTgsImV4cCI6MjEwMDI1ODUxOH0.A8nMLqROUm-ca356daTQb27Qd44VRc46F16M_ECwkeg;
+  // ====================================================================
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('pesan');
+  const kirimBtn = document.getElementById('kirim');
+  const authArea = document.getElementById('authArea');
+  const loginOverlay = document.getElementById('loginOverlay');
+  const loginError = document.getElementById('loginError');
+
+  function tambahBubble(teks, pengirim) {
+    const row = document.createElement('div');
+    row.className = 'row ' + pengirim;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    const label = document.createElement('span');
+    label.className = 'label';
+    label.textContent = pengirim === 'user' ? 'kamu' : 'asisten';
+    bubble.appendChild(label);
+    const isi = document.createElement('span');
+    isi.textContent = teks;
+    bubble.appendChild(isi);
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return row;
+  }
+
+  function tampilkanTyping() {
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    row.id = 'typing-row';
+    row.innerHTML = '<div class="bubble"><span class="label">asisten</span><span class="typing"><span></span><span></span><span></span></span></div>';
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function hapusTyping() {
+    const el = document.getElementById('typing-row');
+    if (el) el.remove();
+  }
+
+  // ===== Login / Logout admin =====
+  async function renderAuthArea() {
+    const { data: { session } } = await sb.auth.getSession();
+    authArea.innerHTML = '';
+    if (session) {
+      const badge = document.createElement('div');
+      badge.className = 'auth-badge';
+      badge.innerHTML = '<span class="dot"></span><span class="label">Mode Admin</span>';
+      const btnLogout = document.createElement('button');
+      btnLogout.textContent = 'Logout';
+      btnLogout.addEventListener('click', async () => {
+        await sb.auth.signOut();
+        renderAuthArea();
+      });
+      badge.appendChild(btnLogout);
+      authArea.appendChild(badge);
+    } else {
+      const btn = document.createElement('button');
+      btn.className = 'auth-btn';
+      btn.textContent = 'Login Admin';
+      btn.addEventListener('click', () => {
+        loginError.textContent = '';
+        loginOverlay.style.display = 'flex';
+      });
+      authArea.appendChild(btn);
+    }
+  }
+
+  document.getElementById('loginCancel').addEventListener('click', () => {
+    loginOverlay.style.display = 'none';
+  });
+
+  document.getElementById('loginSubmit').addEventListener('click', async () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    loginError.textContent = '';
+
+    if (!email || !password) {
+      loginError.textContent = 'Isi email dan password dulu ya.';
+      return;
+    }
+
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      loginError.textContent = 'Login gagal: email/password salah.';
+      return;
+    }
+
+    loginOverlay.style.display = 'none';
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    renderAuthArea();
+    tambahBubble('Berhasil login sebagai admin. Sekarang kamu bisa nambah, ubah, atau hapus jadwal ✅', 'bot');
+  });
+
+  async function kirimPesan(teks) {
+    if (!teks.trim()) return;
+    tambahBubble(teks, 'user');
+    inputEl.value = '';
+    kirimBtn.disabled = true;
+    tampilkanTyping();
+
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      const headers = { 'Content-Type': 'application/json' };
+      if (session) headers['Authorization'] = 'Bearer ' + session.access_token;
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ pesan: teks }),
+      });
+      const data = await res.json();
+      hapusTyping();
+      tambahBubble(data.balasan || 'Maaf, tidak ada balasan.', 'bot');
+    } catch (err) {
+      hapusTyping();
+      tambahBubble('Maaf, gagal terhubung ke server. Coba lagi ya.', 'bot');
+    } finally {
+      kirimBtn.disabled = false;
+      inputEl.focus();
+    }
+  }
+
+  kirimBtn.addEventListener('click', () => kirimPesan(inputEl.value));
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') kirimPesan(inputEl.value);
+  });
+
+  document.querySelectorAll('.hint').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.fill === 'true') {
+        inputEl.value = btn.dataset.msg;
+        inputEl.focus();
+        inputEl.setSelectionRange(0, inputEl.value.length);
+      } else {
+        kirimPesan(btn.dataset.msg);
+      }
+    });
+  });
+
+  renderAuthArea();
+  tambahBubble('Halo! Aku bisa bantu catat, ubah, atau cek jadwal kamu. Coba tulis sesuatu, atau klik salah satu contoh di bawah ✏️', 'bot');
+</script>
+</body>
+</html>
