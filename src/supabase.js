@@ -2,6 +2,13 @@
 // Koneksi ke Supabase (PostgreSQL + Auth) + fungsi simpan/ambil/edit/hapus jadwal
 const { createClient } = require('@supabase/supabase-js');
 
+// ===== DEBUG SEMENTARA — hapus lagi setelah masalah ketemu =====
+console.log('DEBUG SUPABASE_URL ada?', !!process.env.SUPABASE_URL);
+console.log('DEBUG SUPABASE_SECRET_KEY ada?', !!process.env.SUPABASE_SECRET_KEY);
+console.log('DEBUG SUPABASE_ANON_KEY ada?', !!process.env.SUPABASE_ANON_KEY);
+console.log('DEBUG semua nama env yang mengandung SUPABASE:', Object.keys(process.env).filter(k => k.includes('SUPABASE')));
+// ================================================================
+
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SECRET_KEY
@@ -21,8 +28,6 @@ function hariDariTanggal(tanggal) {
   return namaHari[d.getDay()];
 }
 
-// Cek apakah request ini datang dari admin yang sudah login.
-// authHeader formatnya "Bearer <token>", dikirim dari frontend.
 async function verifyAdmin(authHeader) {
   if (!authHeader || !authHeader.startsWith('Bearer ')) return false;
   const token = authHeader.slice(7);
@@ -136,18 +141,3 @@ async function ambilJadwalKelas(kelas, hari) {
     query = query.ilike('hari', hari);
   }
   const { data, error } = await query.order('hari', { ascending: true }).order('jam_mulai', { ascending: true });
-  if (error) throw error;
-  return data;
-}
-
-module.exports = {
-  supabase,
-  verifyAdmin,
-  tambahJadwal,
-  ambilJadwalByTanggal,
-  ambilJadwalByRentang,
-  cariJadwal,
-  updateJadwal,
-  hapusJadwal,
-  ambilJadwalKelas,
-};
