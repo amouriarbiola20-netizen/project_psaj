@@ -1,9 +1,16 @@
 // src/supabase.js
-// Koneksi ke Supabase (PostgreSQL) + fungsi-fungsi untuk simpan/ambil/edit/hapus jadwal
+// Koneksi ke Supabase (PostgreSQL + Auth) + fungsi simpan/ambil/edit/hapus jadwal
 const { createClient } = require('@supabase/supabase-js');
+
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SECRET_KEY
+);
+
+// Client terpisah pakai anon key, khusus buat verifikasi token login user dari frontend.
+const supabaseAuth = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
 );
 
 const USER_ID = 'web_default';
@@ -12,6 +19,17 @@ function hariDariTanggal(tanggal) {
   const namaHari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
   const d = new Date(tanggal + 'T00:00:00');
   return namaHari[d.getDay()];
+}
+
+// Cek apakah request ini datang dari admin yang sudah login.
+// authHeader formatnya "Bearer <token>", dikirim dari frontend.
+async function verifyAdmin(authHeader) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) return false;
+  const token = authHeader.slice(7);
+  const { data, error } = await supabaseAuth.auth.getUser(token);
+  if (error || !data?.user?.email) return false;
+  const adminEmail = (process.env.ADMIN_EMAIL || '').toLowerCase().trim();
+  return data.user.email.toLowerCase() === adminEmail;
 }
 
 async function tambahJadwal(data) {
@@ -124,6 +142,7 @@ async function ambilJadwalKelas(kelas, hari) {
 
 module.exports = {
   supabase,
+  verifyAdmin,
   tambahJadwal,
   ambilJadwalByTanggal,
   ambilJadwalByRentang,
