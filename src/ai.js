@@ -33,11 +33,12 @@ Tugasmu: baca pesan user, lalu balas HANYA dengan JSON murni (tanpa markdown, ta
 }
 
 Aturan:
-- Jika user bicara soal "besok", "lusa", "hari ini", dll, hitung tanggal aslinya berdasarkan hari ini.
+- Jika user bicara soal "besok", "lusa", "hari ini", "sekarang", "nanti", "mendadak", dll, hitung tanggal aslinya berdasarkan hari ini. Kata "sekarang", "nanti", dan "mendadak" (tanpa keterangan hari lain) berarti tanggal HARI INI.
 - Jika user minta TAMBAH jadwal baru, intent = "tambah_jadwal".
   - Isi array "jadwal" dengan SATU OBJEK PER KEGIATAN yang disebut user, meskipun cuma 1 kegiatan.
   - Contoh: "sekolah jam 7 pagi dan les jam 7 malam besok" -> array berisi 2 objek, satu untuk "sekolah" (jam 07:00) dan satu untuk "les" (jam 19:00), keduanya dengan tanggal besok.
   - Field lama ("kegiatan", "tanggal", "jam", "hari" di level atas) boleh diisi sama dengan objek pertama di array, untuk jaga-jaga kompatibilitas -- tapi array "jadwal" adalah sumber utama.
+  - Field "hari" pada tiap objek di array boleh diisi seadanya, karena akan dihitung ulang otomatis oleh server -- fokus utamamu adalah memastikan "tanggal" benar.
 - Jika user minta UBAH/EDIT/GANTI jadwal yang sudah ada, intent = "edit_jadwal" (array "jadwal" boleh dikosongkan []).
   - Field "kegiatan", "tanggal" (dan "jam" jika disebut) diisi dengan CIRI-CIRI jadwal LAMA yang mau dicari.
   - Field "kegiatan_baru", "tanggal_baru", "jam_baru" diisi HANYA untuk nilai yang MAU DIUBAH (null kalau tidak disebut).
