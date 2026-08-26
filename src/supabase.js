@@ -1,13 +1,11 @@
 // src/supabase.js
-// Koneksi ke Supabase (PostgreSQL) + fungsi-fungsi untuk simpan/ambil/edit jadwal
+// Koneksi ke Supabase (PostgreSQL) + fungsi-fungsi untuk simpan/ambil/edit/hapus jadwal
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SECRET_KEY
 );
 
-// Karena chatbot web ini dipakai satu orang (tanpa sistem login),
-// kita pakai satu "id pengguna" tetap untuk menandai baris data di tabel yang sama.
 const USER_ID = 'web_default';
 
 function hariDariTanggal(tanggal) {
@@ -31,8 +29,6 @@ async function tambahJadwal(data) {
     throw err;
   }
 
-  // Nama hari selalu dihitung ulang di server, bukan dipercaya dari AI,
-  // supaya selalu akurat walau AI meleset menyebut nama harinya.
   const hariAkurat = hariDariTanggal(data.tanggal);
 
   const { data: hasil, error } = await supabase
@@ -102,6 +98,17 @@ async function updateJadwal(id, dataBaru) {
   return data[0];
 }
 
+async function hapusJadwal(id) {
+  const { data, error } = await supabase
+    .from('jadwal')
+    .delete()
+    .eq('id', id)
+    .eq('nomor_wa', USER_ID)
+    .select();
+  if (error) throw error;
+  return data[0];
+}
+
 async function ambilJadwalKelas(kelas, hari) {
   let query = supabase
     .from('jadwal_kelas')
@@ -122,5 +129,6 @@ module.exports = {
   ambilJadwalByRentang,
   cariJadwal,
   updateJadwal,
+  hapusJadwal,
   ambilJadwalKelas,
 };
