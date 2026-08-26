@@ -310,11 +310,11 @@
 
     <div class="chat-panel">
       <div class="messages" id="messages"></div>
-      <div class="hints">
-        <button class="hint" data-msg="jadwal aku hari ini apa aja?">jadwal hari ini?</button>
-        <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
-        <button class="hint" data-msg="tambahin jadwal piket kelas besok jam 7 pagi">+ tambah jadwal</button>
-      </div>
+     <div class="hints">
+       <button class="hint" data-msg="jadwal aku hari ini apa aja?">jadwal hari ini?</button>
+       <button class="hint" data-msg="jadwal aku minggu ini apa aja?">jadwal minggu ini?</button>
+       <button class="hint" data-fill="true" data-msg="tambahin jadwal [nama kegiatan] [besok/tanggal] jam [waktu]">+ tambah jadwal</button>
+     </div>
       <div class="input-tray">
         <input id="pesan" type="text" placeholder="Contoh: tambahin jadwal les matematika besok jam 4 sore" autocomplete="off" />
         <button id="kirim">Kirim</button>
@@ -390,8 +390,19 @@
   inputEl.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') kirimPesan(inputEl.value);
   });
+
+  // Tombol contoh: kalau data-fill="true", cuma isi kolom teks (biar bisa diedit
+  // dulu sebelum dikirim). Kalau tidak ada atribut itu, langsung kirim seperti biasa.
   document.querySelectorAll('.hint').forEach((btn) => {
-    btn.addEventListener('click', () => kirimPesan(btn.dataset.msg));
+    btn.addEventListener('click', () => {
+      if (btn.dataset.fill === 'true') {
+        inputEl.value = btn.dataset.msg;
+        inputEl.focus();
+        inputEl.setSelectionRange(0, inputEl.value.length);
+      } else {
+        kirimPesan(btn.dataset.msg);
+      }
+    });
   });
 
   tambahBubble('Halo! Aku bisa bantu catat, ubah, atau cek jadwal kamu. Coba tulis sesuatu, atau klik salah satu contoh di bawah ✏️', 'bot');
