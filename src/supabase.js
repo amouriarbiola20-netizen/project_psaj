@@ -141,3 +141,18 @@ async function ambilJadwalKelas(kelas, hari) {
     query = query.ilike('hari', hari);
   }
   const { data, error } = await query.order('hari', { ascending: true }).order('jam_mulai', { ascending: true });
+  if (error) throw error;
+  return data;
+}
+
+module.exports = {
+  supabase,
+  verifyAdmin,
+  tambahJadwal,
+  ambilJadwalByTanggal,
+  ambilJadwalByRentang,
+  cariJadwal,
+  updateJadwal,
+  hapusJadwal,
+  ambilJadwalKelas,
+};
