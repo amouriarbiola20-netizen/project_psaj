@@ -48,7 +48,6 @@
     box-shadow: 0 0 40px rgba(0,0,0,0.06);
   }
 
-  /* ===== Top bar: logo + nama sekolah, seperti navbar web resmi ===== */
   .topbar {
     display: flex;
     align-items: center;
@@ -80,7 +79,6 @@
     letter-spacing: 0.02em;
   }
 
-  /* ===== Area login admin di pojok kanan topbar ===== */
   .auth-area {
     margin-left: auto;
   }
@@ -124,7 +122,6 @@
   }
   .auth-badge button:hover { border-color: var(--red); color: var(--red-deep); }
 
-  /* ===== Modal login ===== */
   .login-overlay {
     position: fixed;
     inset: 0;
@@ -184,7 +181,6 @@
     min-height: 14px;
   }
 
-  /* ===== Hero: foto gedung sekolah + judul, seperti header web resmi ===== */
   .hero {
     position: relative;
     height: 230px;
@@ -234,7 +230,6 @@
     border-radius: 20px;
   }
 
-  /* ===== Chat panel ===== */
   .chat-panel {
     flex: 1;
     display: flex;
@@ -398,7 +393,6 @@
 <body>
   <div class="frame">
     <div class="topbar">
-      <!-- Ganti "logo-smk.png" sesuai nama file logo yang kamu upload ke folder public/ -->
       <img src="/logo-smk.png" alt="Logo SMK Telkom Purwokerto" />
       <div>
         <div class="school-name">SMK <span>Telkom</span> Purwokerto</div>
@@ -432,7 +426,6 @@
     <footer class="foot-note">SMK Telkom Purwokerto · Papan Jadwal Digital</footer>
   </div>
 
-  <!-- Modal login admin, tersembunyi sampai tombol Login Admin diklik -->
   <div class="login-overlay" id="loginOverlay" style="display:none;">
     <div class="login-box">
       <h3>Login Admin</h3>
@@ -450,8 +443,8 @@
 <script>
   // ============== GANTI 2 BARIS INI sesuai punya kamu ==============
   // Ambil dari dashboard Supabase: Settings > API
-  const SUPABASE_URL = https://bqurhnkdthapekstpsew.supabase.co
-  const SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxdXJobmtkdGhhcGVrc3Rwc2V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2ODI1MTgsImV4cCI6MjEwMDI1ODUxOH0.A8nMLqROUm-ca356daTQb27Qd44VRc46F16M_ECwkeg
+  const SUPABASE_URL = 'https://bqurhnkdthapekstpsew.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxdXJobmtkdGhhcGVrc3Rwc2V3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ2ODI1MTgsImV4cCI6MjEwMDI1ODUxOH0.A8nMLqROUm-ca356daTQb27Qd44VRc46F16M_ECwkeg';
   // ====================================================================
 
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -495,7 +488,6 @@
     if (el) el.remove();
   }
 
-  // ===== Login / Logout admin =====
   async function renderAuthArea() {
     const { data: { session } } = await sb.auth.getSession();
     authArea.innerHTML = '';
