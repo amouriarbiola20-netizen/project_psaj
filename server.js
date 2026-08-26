@@ -7,6 +7,7 @@ const path = require('path');
 
 const { parseChat } = require('./src/ai');
 const {
+  verifyAdmin,
   tambahJadwal,
   ambilJadwalByTanggal,
   ambilJadwalByRentang,
@@ -20,6 +21,9 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Intent-intent ini cuma boleh dijalankan kalau yang minta adalah admin yang sudah login.
+const INTENT_KHUSUS_ADMIN = ['tambah_jadwal', 'edit_jadwal', 'hapus_jadwal'];
+
 app.post('/api/chat', async (req, res) => {
   const pesanUser = (req.body?.pesan || '').trim();
 
@@ -28,8 +32,9 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
+    const isAdmin = await verifyAdmin(req.headers.authorization);
     const hasil = await parseChat(pesanUser);
-    const balasan = await prosesIntent(hasil);
+    const balasan = await prosesIntent(hasil, isAdmin);
     res.json({ balasan });
   } catch (err) {
     console.error('Terjadi error:', err);
@@ -37,7 +42,11 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-async function prosesIntent(hasil) {
+async function prosesIntent(hasil, isAdmin) {
+  if (INTENT_KHUSUS_ADMIN.includes(hasil.intent) && !isAdmin) {
+    return 'Maaf, cuma admin yang bisa nambah, ubah, atau hapus jadwal. Kamu tetap bisa nanya-nanya jadwal kok 😊 (Admin bisa login lewat tombol di pojok kanan atas)';
+  }
+
   switch (hasil.intent) {
     case 'tambah_jadwal': {
       const daftarJadwal = Array.isArray(hasil.jadwal) ? hasil.jadwal : [];
